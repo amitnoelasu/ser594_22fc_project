@@ -1,0 +1,1 @@
+Min of date : 2009-04-01 00:00:00Max of date: 2009-06-01 00:00:00Median of date: 2009-05-01 00:00:00Min of targets: 0max of targets: 4Median of targets: 4Min of counts: 1max of counts: 117median of counts: 6.0
