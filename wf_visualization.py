@@ -142,9 +142,7 @@ def visualize():
     np.median(counts)
     ans += "median of word count in tweets: " + str(np.median(counts))+"\n"
 
-    with open("./data_processed/summary.txt", "w+") as text_file:
-        text_file.write(ans)
-    # In[129]:
+    
 
     wordset = dict()
     for text in texts:
@@ -172,10 +170,12 @@ def visualize():
         key.append(k)
         val.append(v)
     # most frequent word
+    ans += "most frequent word: " + str(key[0]) + "\n"
     # print(key[0])
     # print(val[0])
 
     # least frequent word
+    ans += "least frequent word: " + str(key[-1]) + "\n"
     # print(key[-1])
     # print(val[-1])
 
@@ -216,10 +216,12 @@ def visualize():
         val.append(v)
     # most active user
     print(key[0])
+    ans += "most active user: " + str(key[0]) + "\n"
     # print(val[0])
 
     # least active user
     print(key[-1])
+    ans += "least active user: " + str(key[-1]) + "\n"
     # print(val[-1])
 
     # In[155]:
@@ -227,6 +229,10 @@ def visualize():
     # df.corr(numeric_only=False)
 
     # In[160]:
+    
+    with open("./data_processed/summary.txt", "w+") as text_file:
+        text_file.write(ans)
+    # In[129]:
 
     from datetime import datetime
 
@@ -406,7 +412,7 @@ def visualize():
 
 
     # In[ ]:
-#visualize()
+# visualize()
 
 
 

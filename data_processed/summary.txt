@@ -7,3 +7,7 @@ Median of targets: 4
 Min of word count in tweets: 1
 max of word count in tweets: 117
 median of word count in tweets: 6.0
+most frequent word: lol
+least frequent word: sanity
+most active user: webwoke
+least active user: tweeteradder2
