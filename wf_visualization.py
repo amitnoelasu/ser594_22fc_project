@@ -6,7 +6,7 @@ def visualize():
 
     import pandas as pd
     from datetime import datetime
-    df = pd.read_csv('out.csv', header=0)
+    df = pd.read_csv('data_processed/out.csv', header=0)
 
     # In[85]:
 
@@ -53,14 +53,25 @@ def visualize():
 
     dat
 
+    # datetime(year, month, day, hour, minute, second, microsecond)
+    monthslist = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    new_dates = []
+    for s in dates:
+        timedata = s[3].split(":")
+        b = datetime(int(s[5]), monthslist.index(s[1]) + 1, int(s[2]), int(timedata[0]), int(timedata[1]),
+                     int(timedata[2]))
+        new_dates.append(b)
+
+
+
     # In[96]:
     ans = ""
-    ans += "Min of date : "+str(min(dat))
-    print(min(dat))
+    ans += "Min of date : "+str(min(new_dates))+"\n"
+    # print(min(dat))
 
     # In[97]:
-    ans += "Max of date: "+str(max(dat))
-    print(max(dat))
+    ans += "Max of date: "+str(max(new_dates))+"\n"
+    # print(max(dat))
 
     # In[103]:
 
@@ -73,8 +84,8 @@ def visualize():
 
     # In[105]:
 
-    median = dat[length // 2]
-    ans += "Median of date: " + str(median)
+    median = new_dates[length // 2]
+    ans += "Median of date: " + str(median)+"\n"
     # In[106]:
 
     median
@@ -90,16 +101,16 @@ def visualize():
     # In[109]:
 
     min(targets)
-    ans += "Min of targets: "+str(min(targets))
+    ans += "Min of targets: "+str(min(targets))+"\n"
     # In[110]:
 
     max(targets)
-    ans += "max of targets: " + str(max(targets))
+    ans += "max of targets: " + str(max(targets))+"\n"
     # In[113]:
 
     median = targets[len(targets) // 2]
-    ans += "Median of targets: " + str(median)
-    print(median)
+    ans += "Median of targets: " + str(median)+"\n"
+    # print(median)
 
 
 
@@ -119,19 +130,19 @@ def visualize():
     counts
 
     # In[119]:
-    ans += "Min of counts: " + str(min(counts))
+    ans += "Min of word count in tweets: " + str(min(counts))+"\n"
     min(counts)
     #print("abc")
     # In[120]:
 
     max(counts)
-    ans += "max of counts: " + str(max(counts))
+    ans += "max of word count in tweets: " + str(max(counts))+"\n"
     # In[121]:
     import numpy as np
     np.median(counts)
-    ans += "median of counts: " + str(np.median(counts))
+    ans += "median of word count in tweets: " + str(np.median(counts))+"\n"
 
-    with open("summary.txt", "w+") as text_file:
+    with open("./data_processed/summary.txt", "w+") as text_file:
         text_file.write(ans)
     # In[129]:
 
@@ -161,11 +172,11 @@ def visualize():
         key.append(k)
         val.append(v)
     # most frequent word
-    print(key[0])
+    # print(key[0])
     # print(val[0])
 
     # least frequent word
-    print(key[-1])
+    # print(key[-1])
     # print(val[-1])
 
     # In[144]:
@@ -228,6 +239,7 @@ def visualize():
     delta = (dt - epoch_time)
 
     dat_in_sec = [(date - epoch_time).total_seconds() for date in dat]
+    dat_in_sec = [(date-epoch_time).total_seconds() for date in new_dates]
 
     # In[161]:
 
@@ -256,6 +268,15 @@ def visualize():
     # In[186]:
 
     z = quant_data.corr()
+    writePath = "./data_processed/correlations.txt"
+    #
+    # for index, row in z.iterrows():
+    #     print(index)
+    #     print(row)
+    with open(writePath, 'w+') as f:
+        dfAsString = z.to_string(header=True, index=True)
+        f.write(dfAsString)
+
     print(z)
 
     # In[178]:
@@ -272,7 +293,7 @@ def visualize():
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
-    ax.set(title='Scatter Plot',
+    ax.set(title='age vs word count',
            ylabel='word count', xlabel='age of the tweet(days)')
 
     xx = y[:, 0] / 86400
@@ -288,12 +309,12 @@ def visualize():
     ax.scatter(xx, yy)
     fig.set_dpi(800)
 
-    plt.savefig('word_count_vs_age.png')
+    plt.savefig('visuals/word_count_vs_age.png')
 
     # In[196]:
 
     fig, ax = plt.subplots()
-    ax.set(title='Scatter Plot',
+    ax.set(title='target vs word count',
            xlabel='word count', ylabel='target(polarity of the tweet)')
 
     xx = y[:, 1]
@@ -309,12 +330,12 @@ def visualize():
     ax.scatter(xx, yy)
     fig.set_dpi(800)
 
-    plt.savefig('target_vs_word_count.png')
+    plt.savefig('visuals/target_vs_word_count.png')
 
     # In[198]:
 
     fig, ax = plt.subplots()
-    ax.set(title='Scatter Plot',
+    ax.set(title='target vs age',
            xlabel='age of the tweet(days)', ylabel='target(polarity of the tweet)')
 
     xx = y[:, 0] / 86400
@@ -330,9 +351,62 @@ def visualize():
     ax.scatter(xx, yy)
     fig.set_dpi(800)
 
-    plt.savefig('target_vs_age.png')
+
+
+    plt.savefig('visuals/target_vs_age.png')
+
+    fig, ax = plt.subplots()
+    ax.set(title="Histogram - Most used words", xlabel="Word in tweet", ylabel="Frequency")
+    wordsList = []
+    texts = data[:,4]
+
+    mostFreqWords = set()
+    c = 0
+    for k, v in sortedwordset.items():
+        if (c == 10):
+            break
+        mostFreqWords.add(k)
+        c += 1
+
+    for text in texts:
+        for w in str(text).split(" "):
+            if w in mostFreqWords:
+                wordsList.append(w)
+
+    # print(mostFreqWords)
+    # print(wordsList)
+    ax.hist(wordsList, density=False)
+    fig.set_dpi(800)
+    plt.savefig('visuals/words_histogram.png')
+
+    fig, ax = plt.subplots()
+    ax.set(title="Histogram - Most active users", xlabel="Username", ylabel="Frequency")
+    userslist = []
+    users = data[:, 3]
+
+    mostactiveuser = set()
+    c = 0
+    for k, v in sorteduserset.items():
+        if (c == 5):
+            break
+        mostactiveuser.add(k)
+        c += 1
+    # print(mostactiveuser)
+    for user in users:
+        if user in mostactiveuser:
+            userslist.append(user)
+
+    # print(userslist)
+    # print(wordsList)
+    ax.hist(userslist, density=False)
+    fig.set_dpi(800)
+    plt.savefig('visuals/user_histogram.png')
+
+
+
 
     # In[ ]:
+#visualize()
 
 
 

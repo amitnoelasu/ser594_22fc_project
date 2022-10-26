@@ -1,0 +1,9 @@
+Min of date : 2009-04-06 22:22:49
+Max of date: 2009-06-25 10:28:28
+Median of date: 2009-05-17 23:42:28
+Min of targets: 0
+max of targets: 4
+Median of targets: 4
+Min of word count in tweets: 1
+max of word count in tweets: 117
+median of word count in tweets: 6.0

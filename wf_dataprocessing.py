@@ -10,7 +10,7 @@ def process():
 
     import pandas as pd
     names = ['target', 'id', 'date', 'flag', 'user', 'text']
-    df = pd.read_csv('data_original.csv', encoding='ISO-8859-1', header=None, names=names)
+    df = pd.read_csv('data_original/data_original.csv', encoding='ISO-8859-1', header=None, names=names)
     # df_clean =
 
     df
@@ -63,6 +63,9 @@ def process():
         :return: Dataframe with processed reviews
 
         Lower-case all words.
+        Remove all URLs
+        Remove all @mentions
+        Remove all Hashtags
         Remove all punctuations.
         Remove stopwords. (Stopwords are the lists in the nltk library that are trivial and not relevant to the context/text.)
         Perform lemmatization on the data.
@@ -83,9 +86,11 @@ def process():
 
         cleaned_review['review'] = cleaned_review['review'].replace(r'http\S+', '', regex=True).replace(r'www\S+', '',
                                                                                                         regex=True)
-        cleaned_review['review'] = cleaned_review['review'].str.replace(r'@\w+', " ")
+        cleaned_review['review'] = cleaned_review['review'].str.replace(r'@\w+', " ", regex=True)
 
-        cleaned_review['review'] = cleaned_review['review'].str.replace(r'[^\w\s]+', " ")
+        cleaned_review['review'] = cleaned_review['review'].str.replace(r'#\w+', " ", regex=True)
+
+        cleaned_review['review'] = cleaned_review['review'].str.replace(r'[^\w\s]+', " ", regex=True)
 
         lemmatizer = WordNetLemmatizer()
         for i in range(len(reviewsList)):
@@ -121,11 +126,7 @@ def process():
 
     ans = preprocessing(df3)
 
-    ans
-
     df['text'] = ans
-
-    df
 
     ans = ans.rename(columns={"review": "text"})
 
@@ -139,17 +140,16 @@ def process():
 
     aaa = pd.DataFrame(data=data, columns=["target", "date", "user", "text"])
 
-    aaa
-
     y = aaa[aaa.text.isna()]
 
-    y
-
-    file_name = "out.csv"
+    file_name = "data_processed/out.csv"
 
     aaa.drop_duplicates(subset=['text'], inplace=True)
+
+    #
 
     aaa.drop(aaa[aaa['user'] == ""].index, inplace=True)
 
     aaa.to_csv(file_name, encoding='utf-8')
+# process()
 
