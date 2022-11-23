@@ -1,3 +1,67 @@
+import json
+
+import numpy as np
+import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('punkt')
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+def preprocessing(reviews):
+    # Import nltk - only use nltk library to perform all the following processing.
+    import nltk
+    """
+    :param reviews: Reviews list
+    :return: Dataframe with processed reviews
+    
+    Lower-case all words.
+    Remove all URLs
+    Remove all @mentions
+    Remove all Hashtags
+    Remove all punctuations.
+    Remove stopwords. (Stopwords are the lists in the nltk library that are trivial and not relevant to the context/text.)
+    Perform lemmatization on the data.
+    """
+    # TODO
+    cleaned_review = reviews.copy()
+    from nltk.corpus import stopwords
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('omw-1.4')
+    nltk.download('punkt')
+    from nltk.stem import WordNetLemmatizer
+    from nltk.tokenize import word_tokenize
+
+    reviewsList = cleaned_review['review']
+
+    cleaned_review['review'] = cleaned_review['review'].str.lower()
+
+    cleaned_review['review'] = cleaned_review['review'].replace(r'http\S+', '', regex=True).replace(r'www\S+', '',
+                                                                                                    regex=True)
+    cleaned_review['review'] = cleaned_review['review'].str.replace(r'@\w+', " ", regex=True)
+
+    cleaned_review['review'] = cleaned_review['review'].str.replace(r'#\w+', " ", regex=True)
+
+    cleaned_review['review'] = cleaned_review['review'].str.replace(r'[^\w\s]+', " ", regex=True)
+
+    lemmatizer = WordNetLemmatizer()
+    for i in range(len(reviewsList)):
+        review = cleaned_review['review'][i]
+        review = [i for i in word_tokenize(review) if i not in stopwords.words('english')]
+        cleaned_review['review'][i] = review
+
+        lemmatized_words = []
+        for word in review:
+            lemmatized_words.append(lemmatizer.lemmatize(word))
+        cleaned_review['review'][i] = " ".join(lemmatized_words)
+
+    # Return the dataframe with the processed data
+    return cleaned_review  # TODO
+
 def process():
     # -*- coding: utf-8 -*-
     """ds594.ipynb
@@ -55,101 +119,217 @@ def process():
 
     df3 = df.loc[:, ['text']]
 
-    def preprocessing(reviews):
-        # Import nltk - only use nltk library to perform all the following processing.
-        import nltk
-        """
-        :param reviews: Reviews list
-        :return: Dataframe with processed reviews
-
-        Lower-case all words.
-        Remove all URLs
-        Remove all @mentions
-        Remove all Hashtags
-        Remove all punctuations.
-        Remove stopwords. (Stopwords are the lists in the nltk library that are trivial and not relevant to the context/text.)
-        Perform lemmatization on the data.
-        """
-        # TODO
-        cleaned_review = reviews.copy()
-        from nltk.corpus import stopwords
-        nltk.download('stopwords')
-        nltk.download('wordnet')
-        nltk.download('omw-1.4')
-        nltk.download('punkt')
-        from nltk.stem import WordNetLemmatizer
-        from nltk.tokenize import word_tokenize
-
-        reviewsList = cleaned_review['review']
-
-        cleaned_review['review'] = cleaned_review['review'].str.lower()
-
-        cleaned_review['review'] = cleaned_review['review'].replace(r'http\S+', '', regex=True).replace(r'www\S+', '',
-                                                                                                        regex=True)
-        cleaned_review['review'] = cleaned_review['review'].str.replace(r'@\w+', " ", regex=True)
-
-        cleaned_review['review'] = cleaned_review['review'].str.replace(r'#\w+', " ", regex=True)
-
-        cleaned_review['review'] = cleaned_review['review'].str.replace(r'[^\w\s]+', " ", regex=True)
-
-        lemmatizer = WordNetLemmatizer()
-        for i in range(len(reviewsList)):
-            review = cleaned_review['review'][i]
-            review = [i for i in word_tokenize(review) if i not in stopwords.words('english')]
-            cleaned_review['review'][i] = review
-
-            lemmatized_words = []
-            for word in review:
-                lemmatized_words.append(lemmatizer.lemmatize(word))
-            cleaned_review['review'][i] = " ".join(lemmatized_words)
-
-        # Return the dataframe with the processed data
-        return cleaned_review  # TODO
-
-    df['text']
-
-    # In[24]:
 
     data = df.to_numpy()
-
-    # In[25]:
-
-    data
-
-    # In[26]:
-
     x = data[:, 3]
-
-    # In[27]:
-
     df3 = pd.DataFrame(x, columns=['review'])
 
     ans = preprocessing(df3)
-
     df['text'] = ans
-
     ans = ans.rename(columns={"review": "text"})
-
     df['text'] = ans
 
     xx = df[df.text.isna()]
-
     data[:, 3] = ans['text']
-
     len(data[:, 3])
-
     aaa = pd.DataFrame(data=data, columns=["target", "date", "user", "text"])
-
     y = aaa[aaa.text.isna()]
-
     file_name = "data_processed/out.csv"
-
     aaa.drop_duplicates(subset=['text'], inplace=True)
-
-    #
-
     aaa.drop(aaa[aaa['user'] == ""].index, inplace=True)
-
     aaa.to_csv(file_name, encoding='utf-8')
-# process()
 
+
+def preprocessing1(tweets):
+    # Import nltk - only use nltk library to perform all the following processing.
+
+    """
+    :param reviews: Reviews list
+    :return: Dataframe with processed reviews
+
+    Lower-case all words.
+    Remove all URLs
+    Remove all @mentions
+    Remove all Hashtags
+    Remove all punctuations.
+    Remove stopwords. (Stopwords are the lists in the nltk library that are trivial and not relevant to the context/text.)
+    Perform lemmatization on the data.
+    """
+
+    copy_of_tweets = tweets.copy()
+
+    cleaned_tweets = copy_of_tweets['tweets']
+    cleaned_tweets = cleaned_tweets.str.lower()
+
+    cleaned_tweets = cleaned_tweets.str.replace("^.{1,2}", "", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace("b['\"]", "", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace("\\\\n", "", regex=True)
+
+    cleaned_tweets = cleaned_tweets.replace(r'http\S+', '', regex=True).replace(r'www\S+', '',
+                                                                                                    regex=True)
+    cleaned_tweets = cleaned_tweets.str.replace(r'@\w+', " ", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace("\\\\x.{2}", "", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace("\\\\u.{4}", "", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace(r'#\w+', " ", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace(r'[^\w\s]+', " ", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace(r'[^\w\s]+', " ", regex=True)
+
+    cleaned_tweets = cleaned_tweets.str.replace("[0-9]", " ", regex=True)
+
+    lemmatizer = WordNetLemmatizer()
+    list_of_cleaned_tweets = []
+    import re
+
+
+    for i in range(len(tweets)):
+        # detect language
+
+        review = cleaned_tweets[i]
+
+        lang = "unknown"
+        from langdetect import detect
+        try:
+            lang = detect(review)
+        except:
+            pass
+
+        if lang != "en":
+            if lang == "unknown":
+                continue
+            # from translate import Translator
+            # translator = Translator(to_lang="en")
+            # translation = translator.translate(review)
+            # print("original: ",review)
+            # print("translation: ",translation)
+            # review = translation
+
+            # from deep_translator import GoogleTranslator
+            #
+            # translated = GoogleTranslator(source='auto', target='en').translate(review)
+            # # print(translated)
+            # print(translated)
+
+            import re
+            # replaced = re.sub("^b'", "", translated)
+            # replaced = re.sub("\\\\u.{4}", '', replaced)
+            # print(type(replaced))
+            #
+            # print(replaced.encode("utf-8"))
+            # review = replaced
+            # review = translated
+
+            # outpout -> Ich möchte diesen Text übersetzen
+
+            continue
+
+        review = [i for i in word_tokenize(review) if i not in stopwords.words('english')]
+        cleaned_tweets[i] = review
+
+        lemmatized_words = []
+        for word in review:
+            lemmatized_words.append(lemmatizer.lemmatize(word))
+        cleaned_tweets[i] = " ".join(lemmatized_words)
+        list_of_cleaned_tweets.append(cleaned_tweets[i])
+
+    # Return the dataframe with the processed data
+    return list_of_cleaned_tweets # TODO
+
+def process1():
+    json_file = open('data_original/json_data.json')
+
+    # returns JSON object as
+    # a dictionary
+    # 'openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism', 'wordcount', 'category', 'tweets']
+    # modified_df.append(all_tweets)
+    data = json.load(json_file)
+    df = pd.DataFrame(columns = ['username', 'openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism',
+                           'wordcount', 'category', 'tweets'])
+    # print(df)
+    i = 10
+    for row in data:
+        processed_dict = dict()
+        processed_row = []
+        processed_row.append(row['username'])
+        processed_row.append(row['openness'])
+        processed_row.append(row['conscientiousness'])
+        processed_row.append(row['extraversion'])
+        processed_row.append(row['agreeableness'])
+        processed_row.append(row['neuroticism'])
+        processed_row.append(row['wordcount'])
+        processed_row.append(row['category'])
+        list_raw_tweets_of_user = row['tweets']
+
+        processed_dict['username'] = row['username']
+        processed_dict['openness'] = row['openness']
+        processed_dict['conscientiousness'] = row['conscientiousness']
+        processed_dict['extraversion'] = row['extraversion']
+        processed_dict['agreeableness'] = row['agreeableness']
+        processed_dict['neuroticism'] = row['neuroticism']
+        processed_dict['wordcount'] = row['wordcount']
+        processed_dict['category'] = row['category']
+
+        raw_tweets_of_user = []
+        processed_tweets_of_user = []
+        for tweets in list_raw_tweets_of_user:
+            # print(len(tweets))
+            # print(type(tweets))
+            #
+            # print(len(tweets[0]))
+            # print(type(tweets[0]))
+            for tweet in tweets:
+                # print(len(tweet))
+                # print(type(tweet))
+                # print(tweet.encode('utf-8'))
+                raw_tweets_of_user.append(tweet.encode('utf-8'))
+                # break
+
+        raw_tweet_df = pd.DataFrame(np.array(raw_tweets_of_user), columns=['tweets'], dtype='str')
+        list_cleaned_tweets = preprocessing1(raw_tweet_df)
+        processed_row.append(list_cleaned_tweets)
+
+
+        # cleaned_tweet_df = pd.DataFrame(list_cleaned_tweets, columns=['tweets'])
+        # print("**************************************************")
+
+
+        np_processed_row = np.array(processed_row, dtype='object')
+
+        # print(np_processed_row)
+        # print()
+        df_of_this_row = pd.DataFrame(np_processed_row)
+        # print(df_of_this_row)
+        # df = pd.concat([df, df_of_this_row])
+        # processed_row.append()
+        if len(list_cleaned_tweets) == 0:
+            continue
+
+        # processed_dict['tweets'] = df_of_this_row
+        processed_dict['tweets'] = np.array(list_cleaned_tweets, dtype='object')
+        df = df.append(processed_dict, ignore_index=True)
+        # df = pd.concat([df, pd.DataFrame(processed_dict)])
+        # print(df['tweets'])
+
+
+
+
+
+    # byte_str = data[0]['tweets'][0][0].encode('utf-8')
+    # Iterating through the json
+    # list
+    # print(byte_str)
+    print(df)
+    ouput_csv_path = "data_processed/out_celeb.csv"
+    # df.to_csv(ouput_csv_path, encoding='utf-8')
+    # Closing file
+    json_path = "data_processed/celeb_json.json"
+    result = df.to_json(json_path, orient='records')
+    json_file.close()
+
+# process1()
