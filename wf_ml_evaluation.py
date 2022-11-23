@@ -43,17 +43,19 @@ def evaluate():
     # #print("train data\n",XY_train)
     # #print()
     # #print("test data\n", XY_test)
-    df_new = pd.DataFrame()
-    for i in range(len(XY_test)):
-        if (i%2 == 1):
-            xxx = XY_test.iloc[i-1] + df.iloc[i]
-            df_new = df_new.append(xxx, ignore_index=True)
-            # for j in range(len(df.iloc[0,:])):
-            #     df.iloc[i-1]
+    # df_new = pd.DataFrame(columns=XY_test.columns)
+    # for i in range(len(XY_test)):
+    #     if (i%2 == 1):
+    #         xxx = (XY_test.iloc[i-1] + df.iloc[i])/2
+    #         df_new = df_new.append(xxx, ignore_index=True)
+    #         # for j in range(len(df.iloc[0,:])):
+    #         #     df.iloc[i-1]
+    #
+    # # df_new=df_new.div(2)
+    # print("length",len(df_new))
+    # # print(df_new)
+    # XY_test = XY_test.append(df_new)
 
-    df_new=df_new.div(2)
-    print("length",len(df_new))
-    print(df_new)
     # keys=[]
     # for i in df_new:
     #     keys.append(i)
