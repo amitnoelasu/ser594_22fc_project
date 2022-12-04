@@ -328,8 +328,10 @@ def process1():
     ouput_csv_path = "data_processed/out_celeb.csv"
     # df.to_csv(ouput_csv_path, encoding='utf-8')
     # Closing file
+    print("A")
+    print(df)
     json_path = "data_processed/celeb_json.json"
     result = df.to_json(json_path, orient='records')
     json_file.close()
-
+    print("****************************************************************************************************")
 # process1()

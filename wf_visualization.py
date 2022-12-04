@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def visualize():
     # !/usr/bin/env python
     # coding: utf-8
@@ -409,10 +412,73 @@ def visualize():
     plt.savefig('visuals/user_histogram.png')
 
 
+def visualize1():
+    import json
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    with open('data_processed/celeb_json.json', 'r') as f:
+        data = json.load(f)
+
+    data1 = pd.read_json('data_processed/celeb_json.json')
+
+    openness = -1
+    conscientiousness = -1
+    extraversion = -1
+
+    dat = data1['openness']
+    dat = dat.to_numpy()
+    # mean =
+    print(np.mean(dat))
+    print(np.median(dat))
+    print(np.min(dat))
+    print(np.max(dat))
+
+    dat = data1['conscientiousness']
+    dat = dat.to_numpy()
+    # mean =
+    print(np.mean(dat))
+    print(np.median(dat))
+    print(np.min(dat))
+    print(np.max(dat))
+    # #print(data1)
+
+    dat = data1['neuroticism']
+    dat = dat.to_numpy()
+    # mean =
+    print(np.mean(dat))
+    print(np.median(dat))
+    print(np.min(dat))
+    print(np.max(dat))
+    #
+
+    fig, ax = plt.subplots()
+    ax.set(title="Histogram - openness", xlabel="openness", ylabel="Frequency")
+
+    ax.hist(dat, density=False)
+    fig.set_dpi(800)
+    plt.savefig('visuals/op_histogram.png')
+
+    fig, ax = plt.subplots()
+    ax.set(title="Histogram - conscientiousness", xlabel="conscientiousness", ylabel="Frequency")
+
+    ax.hist(data1['conscientiousness'].to_numpy(), density=False)
+    fig.set_dpi(800)
+    plt.savefig('visuals/co_histogram.png')
+
+    fig, ax = plt.subplots()
+    ax.set(title="Histogram - Extraversion", xlabel="Extraversion", ylabel="Frequency")
+
+    ax.hist(data1['extraversion'].to_numpy(), density=False)
+    fig.set_dpi(800)
+    plt.savefig('visuals/ex_histogram.png')
+
+
 
 
     # In[ ]:
 # visualize()
+visualize1()
 
 
 

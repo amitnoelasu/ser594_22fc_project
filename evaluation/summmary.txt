@@ -1,5 +1,5 @@
-          Dataset             Method       MAE       MSE
-0  json_data.json  Linear regression  4.385784  5.763045
-1  json_data.json   Ridge regression  4.390807  5.744391
-2  json_data.json   Lasso regression  4.391514  5.711964
-3  json_data.json     SVM regression  4.731647  6.077709
+          Dataset             Method       MAE        MSE
+0  json_data.json  Linear regression  6.349464  12.166638
+1  json_data.json   Ridge regression  6.367348  12.159887
+2  json_data.json   Lasso regression  6.387969  12.162841
+3  json_data.json     SVM regression  6.721293  12.314284

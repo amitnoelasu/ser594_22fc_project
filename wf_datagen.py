@@ -68,7 +68,12 @@ if __name__ == '__main__':
     df = pd.read_csv(filepath, encoding='utf-8', header=0)
     print(df.columns)
     # print(df)
+    #adding real data point
+    # "usuario","op","co","ex","ag","ne","wordcount","categoria"
+    # df = df.append([df, pd.DataFrame(C)])
     npData = df.to_numpy()
+    npData = np.vstack([npData, np.array(["Puplunar","84","55","52","84","81","0","1"])])
+    # npData = np.append(npData, np.array(["usuario","op","co","ex","ag","ne","wordcount","categoria"]))
     handles = npData[:,0]
     print(npData[0])
     # print(handles)
