@@ -8,14 +8,14 @@ import tweepy
 
 # Fill the X's with the credentials obtained by
 # following the above mentioned procedure.
-api_key = "HC3jFRy9Oo6q1nwvqD6EMl9rC"
-api_key_secret = "DbKXZERoG9bYYbXyGviWAhYpywQ7G6grHnLOcIS6sfYmiArCPK"
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAOgDigEAAAAAUGXNAhg9mhXeqPxIMK%2FO%2B%2B7UDMM%3DMdm7WlOAnHT7iu6qf97JdH8VQQDBcCsaQeTAwtwBnscVPfR5AY"
+api_key = "X"
+api_key_secret = "X"
+bearer_token = "X"
 
 # consumer_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 # consumer_secret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-access_key = "1584288699583328256-X0WGzmvm4myDjc4HxGMo58dfyaEfDb"
-access_secret = "QbtUj52gXMKMfCB5BgyGvG5gPdrvwXIeovXTNgznsqnvH"
+access_key = "X"
+access_secret = "X"
 
 
 # Function to extract tweets
